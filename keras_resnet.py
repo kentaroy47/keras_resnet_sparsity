@@ -8,7 +8,7 @@ import numpy as np
 model = ResNet50(weights='imagenet')
 from keras import backend as K
 
-img_path = 'elephant.jpg'
+img_path = 'cat.jpg'
 img = image.load_img(img_path, target_size=(224, 224))
 x = image.img_to_array(img)
 x = np.expand_dims(x, axis=0)
@@ -44,14 +44,14 @@ inp = model.input                                           # input placeholder
 outputs = [layer.output for layer in model.layers]          # all layer outputs
 functors = [K.function([inp]+ [K.learning_phase()], [out]) for out in outputs]  # evaluation functions
 
-# Testing
+# put in random input to nn
 test = np.random.random(input_shape)[np.newaxis,...]
 layer_outs = [func([test, 1.]) for func in functors]
               
-for i in range(len(layer_outs)):
-    layer_outs[i]=layer_outs[i]/np.max(layer_outs[i])
-    activations.append(np.mean(np.abs(layer_outs[i])))
-    activations_std.append(np.std(layer_outs[i]))
+#for i in range(len(layer_outs)):
+#    layer_outs[i]=layer_outs[i]/np.max(layer_outs[i])
+#    activations.append(np.mean(np.abs(layer_outs[i])))
+#    activations_std.append(np.std(layer_outs[i]))
 
 print("get sparcity")
     
@@ -77,7 +77,22 @@ for i in range(len(layer_outs[:])):
 sparcity_fin=[]
 layer_size_fin=[]
 for i in range(len(sparcity[:])):
-    if sparcity[i]>20:
+    if sparcity[i] > 20:
         sparcity_fin.append(sparcity8b[i])
         layer_size_fin.append(layer_size[i])
+        
+print("cost for adaptive processor")
+
+cost=[]
+
+for i in range(len(sparcity_fin[:])):
+    if sparcity_fin[i] < 50:
+       cost.append(50)
+    else:
+       cost.append(sparcity_fin[i])
+           
+       
+
+
+
         
