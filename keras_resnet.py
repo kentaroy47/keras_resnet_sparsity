@@ -58,15 +58,16 @@ print("get sparcity")
 import numpy as np
 sparcity=[]
 sparcity8b=[]
+layer_size=[]
 
 for i in range(len(layer_outs[:])):
 
     a=layer_outs[i]
-    a=a.reshape(-1)
+    a=a[0].reshape(-1)
     sparcity.append((len(a)-np.count_nonzero(a))/len(a)*100)
+    layer_size.append(len(a))
     
-    print("zeros:", (len(a)-np.count_nonzero(a)/len(a)*100) )
-    
+    print("zeros:", sparcity[i] )
     
     cc=np.sum(np.abs(a)<1/128) #count number of elements < 128   
     sparcity8b.append(cc/len(a)*100)
@@ -74,6 +75,9 @@ for i in range(len(layer_outs[:])):
     print("zeros in 8b:", sparcity8b[i])
 
 sparcity_fin=[]
+layer_size_fin=[]
 for i in range(len(sparcity[:])):
     if sparcity[i]>20:
         sparcity_fin.append(sparcity8b[i])
+        layer_size_fin.append(layer_size[i])
+        
